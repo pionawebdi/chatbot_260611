@@ -1,3 +1,4 @@
+import base64
 import html as html_lib
 import io
 import json
@@ -5,6 +6,8 @@ import markdown as md_lib
 import streamlit as st
 from openai import OpenAI
 from streamlit_mic_recorder import mic_recorder
+
+VISION_MODELS = {"gpt-4o", "gpt-4o-mini", "gpt-4-mini", "gpt-5"}
 
 st.set_page_config(
     page_title="서울 관광 AI 가이드",
@@ -224,6 +227,25 @@ with st.sidebar:
         use_container_width=True,
         key="mic_sidebar",
     )
+    st.divider()
+    st.markdown("### 🖼️ 이미지 첨부")
+    st.caption("이미지를 올리고 질문하세요")
+    uploaded = st.file_uploader(
+        "",
+        type=["jpg", "jpeg", "png", "webp"],
+        label_visibility="collapsed",
+        key="img_upload",
+    )
+    if uploaded:
+        st.image(uploaded, use_container_width=True)
+        st.session_state.pending_image = uploaded.getvalue()
+        st.session_state.pending_image_type = uploaded.type
+    if st.session_state.get("pending_image") and not uploaded:
+        st.success("이미지 준비됨. 질문을 입력하세요!", icon="🖼️")
+        if st.button("🗑️ 이미지 제거", use_container_width=True):
+            st.session_state.pending_image = None
+            st.session_state.pending_image_type = None
+            st.rerun()
 
 # ── API key guard ─────────────────────────────────────────────────────────────
 if not openai_api_key:
@@ -237,6 +259,10 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "preset_prompt" not in st.session_state:
     st.session_state.preset_prompt = None
+if "pending_image" not in st.session_state:
+    st.session_state.pending_image = None
+if "pending_image_type" not in st.session_state:
+    st.session_state.pending_image_type = None
 
 # ── Render helpers ────────────────────────────────────────────────────────────
 def render_user(content: str):
@@ -312,20 +338,47 @@ if st.session_state.preset_prompt:
 
 # ── Generate response ─────────────────────────────────────────────────────────
 if prompt:
+    # 이미지 가져오고 초기화
+    pending_image = st.session_state.pending_image
+    pending_image_type = st.session_state.pending_image_type or "image/jpeg"
+    st.session_state.pending_image = None
+    st.session_state.pending_image_type = None
+
+    # 이미지 미리보기 (우측 정렬)
+    if pending_image:
+        b64_preview = base64.b64encode(pending_image).decode()
+        st.markdown(
+            f'<div style="display:flex;justify-content:flex-end;margin:4px 0 2px">'
+            f'<img src="data:{pending_image_type};base64,{b64_preview}" '
+            f'style="max-width:200px;max-height:180px;border-radius:12px;object-fit:cover">'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
     st.session_state.messages.append({"role": "user", "content": prompt})
     render_user(prompt)
+
+    # API 메시지 구성 (이미지 포함 시 마지막 메시지를 vision 형식으로)
+    history = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+    if pending_image:
+        b64 = base64.b64encode(pending_image).decode()
+        history[-1]["content"] = [
+            {"type": "text", "text": prompt},
+            {"type": "image_url", "image_url": {"url": f"data:{pending_image_type};base64,{b64}"}},
+        ]
+        api_model = model if model in VISION_MODELS else "gpt-4o-mini"
+        if api_model != model:
+            st.info(f"이미지 인식을 위해 {api_model} 모델을 사용합니다.", icon="ℹ️")
+    else:
+        api_model = model
 
     placeholder = st.empty()
     full_response = ""
 
     try:
         stream = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                *[{"role": m["role"], "content": m["content"]}
-                  for m in st.session_state.messages],
-            ],
+            model=api_model,
+            messages=[{"role": "system", "content": SYSTEM_PROMPT}, *history],
             temperature=temperature,
             stream=True,
         )
