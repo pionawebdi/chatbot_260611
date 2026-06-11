@@ -209,6 +209,16 @@ with st.sidebar:
             file_name="seoul_chat.json", mime="application/json",
             use_container_width=True,
         )
+    st.divider()
+    st.markdown("### 🎤 음성 입력")
+    st.caption("버튼을 눌러 음성으로 질문하세요")
+    sidebar_audio = mic_recorder(
+        start_prompt="🎤 녹음 시작",
+        stop_prompt="⏹️ 녹음 완료",
+        just_once=True,
+        use_container_width=True,
+        key="mic_sidebar",
+    )
 
 # ── API key guard ─────────────────────────────────────────────────────────────
 if not openai_api_key:
@@ -271,26 +281,11 @@ for col, (cat, query) in zip(cols, CATEGORY_QUERIES.items()):
         if st.button(cat, key=f"cat_{cat}", use_container_width=True):
             st.session_state.preset_prompt = query
 
-# ── Voice input ───────────────────────────────────────────────────────────────
-st.markdown(
-    '<div style="text-align:center;margin:16px 0 6px;color:#9aabbd;font-size:12px">'
-    '음성으로도 질문할 수 있어요</div>',
-    unsafe_allow_html=True,
-)
-_, col_mic, _ = st.columns([2, 1, 2])
-with col_mic:
-    audio = mic_recorder(
-        start_prompt="🎤 녹음",
-        stop_prompt="⏹️ 완료",
-        just_once=True,
-        use_container_width=True,
-        key="mic_input",
-    )
-
-if audio and audio.get("bytes"):
+# ── Voice input (사이드바에서 처리) ───────────────────────────────────────────
+if sidebar_audio and sidebar_audio.get("bytes"):
     with st.spinner("음성을 텍스트로 변환 중..."):
         try:
-            audio_file = io.BytesIO(audio["bytes"])
+            audio_file = io.BytesIO(sidebar_audio["bytes"])
             audio_file.name = "recording.wav"
             transcript = client.audio.transcriptions.create(
                 model="whisper-1",
