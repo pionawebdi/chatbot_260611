@@ -1,3 +1,4 @@
 streamlit
 openai
 markdown
+streamlit-mic-recorder

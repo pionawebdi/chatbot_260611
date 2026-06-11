@@ -1,8 +1,10 @@
 import html as html_lib
+import io
 import json
 import markdown as md_lib
 import streamlit as st
 from openai import OpenAI
+from streamlit_mic_recorder import mic_recorder
 
 st.set_page_config(
     page_title="서울 관광 AI 가이드",
@@ -268,6 +270,37 @@ for col, (cat, query) in zip(cols, CATEGORY_QUERIES.items()):
     with col:
         if st.button(cat, key=f"cat_{cat}", use_container_width=True):
             st.session_state.preset_prompt = query
+
+# ── Voice input ───────────────────────────────────────────────────────────────
+st.markdown(
+    '<div style="text-align:center;margin:16px 0 6px;color:#9aabbd;font-size:12px">'
+    '음성으로도 질문할 수 있어요</div>',
+    unsafe_allow_html=True,
+)
+_, col_mic, _ = st.columns([2, 1, 2])
+with col_mic:
+    audio = mic_recorder(
+        start_prompt="🎤 녹음",
+        stop_prompt="⏹️ 완료",
+        just_once=True,
+        use_container_width=True,
+        key="mic_input",
+    )
+
+if audio and audio.get("bytes"):
+    with st.spinner("음성을 텍스트로 변환 중..."):
+        try:
+            audio_file = io.BytesIO(audio["bytes"])
+            audio_file.name = "recording.wav"
+            transcript = client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file,
+                language="ko",
+            )
+            if transcript.text:
+                st.session_state.preset_prompt = transcript.text
+        except Exception as e:
+            st.error(f"음성 인식 오류: {e}")
 
 # ── Chat input ────────────────────────────────────────────────────────────────
 typed = st.chat_input("궁금한 거 뭐든 물어보세요. 작은 것도 괜찮아요 🗼")
