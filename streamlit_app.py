@@ -4,6 +4,7 @@ import io
 import json
 import markdown as md_lib
 import streamlit as st
+import streamlit.components.v1 as components
 from openai import OpenAI
 from streamlit_mic_recorder import mic_recorder
 
@@ -347,6 +348,64 @@ if sidebar_audio and sidebar_audio.get("bytes"):
                 st.session_state.preset_prompt = transcript.text
         except Exception as e:
             st.error(f"음성 인식 오류: {e}")
+
+# ── Floating clear button (입력창 옆 배치) ────────────────────────────────────
+if st.button("🔄", key="clear_float", help="대화 초기화"):
+    st.session_state.messages = []
+    st.rerun()
+
+components.html("""
+<script>
+(function () {
+    function styleBtn() {
+        try {
+            var doc = window.parent.document;
+            var btns = doc.querySelectorAll('[data-testid="stButton"] > button');
+            for (var i = 0; i < btns.length; i++) {
+                var txt = (btns[i].innerText || '').trim();
+                if (txt === '🔄') {
+                    var ec = btns[i].closest('[data-testid="element-container"]');
+                    if (ec) {
+                        ec.style.cssText = [
+                            'position:fixed!important',
+                            'bottom:110px!important',
+                            'left:calc(50% + 238px)!important',
+                            'z-index:1000!important',
+                            'width:44px!important',
+                            'height:44px!important',
+                            'margin:0!important',
+                            'padding:0!important'
+                        ].join(';');
+                    }
+                    btns[i].style.cssText = [
+                        'border-radius:50%!important',
+                        'width:44px!important',
+                        'height:44px!important',
+                        'padding:0!important',
+                        'min-height:0!important',
+                        'background:#ffffff!important',
+                        'border:1.5px solid #d0daea!important',
+                        'box-shadow:0 4px 20px rgba(0,45,114,.12)!important',
+                        'font-size:18px!important',
+                        'color:#0054b0!important',
+                        'cursor:pointer!important',
+                        'display:flex!important',
+                        'align-items:center!important',
+                        'justify-content:center!important'
+                    ].join(';');
+                    break;
+                }
+            }
+        } catch(e) {}
+    }
+    [100, 400, 800].forEach(function(d){ setTimeout(styleBtn, d); });
+    try {
+        new MutationObserver(function(){ setTimeout(styleBtn, 50); })
+            .observe(window.parent.document.body, {childList:true, subtree:true});
+    } catch(e) {}
+})();
+</script>
+""", height=0)
 
 # ── Chat input ────────────────────────────────────────────────────────────────
 typed = st.chat_input("궁금한 거 뭐든 물어보세요. 작은 것도 괜찮아요 🗼")
