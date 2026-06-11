@@ -116,16 +116,23 @@ st.markdown("""
     padding: 1px 5px; font-size: 12px;
 }
 
-/* Category pill buttons */
+/* Category chip buttons wrapper */
+div[data-testid="stHorizontalBlock"] {
+    margin: 50px 0 !important;
+    gap: 8px !important;
+}
+
+/* Category chip buttons */
 div[data-testid="stHorizontalBlock"] button {
     border-radius: 18px !important;
     border: 1.5px solid #0054b0 !important;
     color: #0054b0 !important;
     background: #fff !important;
     font-size: 11.5px !important;
-    padding: 4px 0 !important;
+    padding: 6px 4px !important;
     font-weight: 500 !important;
     transition: all .15s !important;
+    white-space: nowrap !important;
 }
 div[data-testid="stHorizontalBlock"] button:hover {
     background: #0054b0 !important;
