@@ -75,7 +75,7 @@ st.markdown("""
 
 /* Date divider */
 .date-div {
-    text-align: center; color: #9aabbd; font-size: 11px;
+    text-align: center; color: #9aabbd; font-size: 22px;
     margin: 12px 0 8px; letter-spacing: .3px;
 }
 
