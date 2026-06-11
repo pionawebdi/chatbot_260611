@@ -8,6 +8,7 @@ st.set_page_config(
     page_title="서울 관광 AI 가이드",
     page_icon="🗼",
     layout="centered",
+    initial_sidebar_state="collapsed",
 )
 
 SYSTEM_PROMPT = """당신은 서울 전문 관광 AI 가이드 '서울이'입니다.
@@ -63,9 +64,11 @@ st.markdown("""
     width: 100% !important;
 }
 
-/* Fixed top app bar */
+/* Fixed top app bar — aligned with content column */
 .topbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    position: fixed; top: 0; z-index: 1000;
+    left: 50%; transform: translateX(-50%);
+    width: min(460px, 100%);
     background: linear-gradient(135deg, #002d72 0%, #0054b0 100%);
     text-align: center; padding: 11px 16px 10px;
     box-shadow: 0 2px 12px rgba(0,45,114,0.35);
