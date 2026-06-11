@@ -43,11 +43,24 @@ st.markdown("""
                  'Noto Sans KR', sans-serif;
 }
 
-/* Center narrow container */
+/* Remove Streamlit default side padding */
+.main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Centered content column */
 .main .block-container {
     max-width: 460px !important;
+    width: 100% !important;
     margin: 0 auto !important;
-    padding: 78px 14px 200px !important;
+    padding: 78px 20px 200px !important;
+    box-sizing: border-box !important;
+}
+
+/* All direct children align to same grid */
+.main .block-container > div {
+    width: 100% !important;
 }
 
 /* Fixed top app bar */
@@ -125,7 +138,7 @@ div[data-testid="stHorizontalBlock"] button:hover {
     bottom: 100px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: min(432px, calc(100% - 28px)) !important;
+    width: min(460px, calc(100% - 40px)) !important;
     background: #ffffff !important;
     border: 1.5px solid #d0daea !important;
     border-radius: 28px !important;
