@@ -47,7 +47,7 @@ st.markdown("""
 .main .block-container {
     max-width: 460px !important;
     margin: 0 auto !important;
-    padding: 78px 14px 90px !important;
+    padding: 78px 14px 200px !important;
 }
 
 /* Fixed top app bar */
@@ -119,16 +119,19 @@ div[data-testid="stHorizontalBlock"] button:hover {
     color: #fff !important;
 }
 
-/* Fixed bottom chat input */
+/* Fixed bottom chat input — floated 100px above bottom */
 [data-testid="stChatInput"] {
     position: fixed !important;
-    bottom: 0 !important; left: 50% !important;
+    bottom: 100px !important;
+    left: 50% !important;
     transform: translateX(-50%) !important;
-    width: min(460px, 100%) !important;
-    background: #f0f4f8 !important;
-    padding: 10px 14px 16px !important;
+    width: min(432px, calc(100% - 28px)) !important;
+    background: #ffffff !important;
+    border: 1.5px solid #d0daea !important;
+    border-radius: 28px !important;
+    box-shadow: 0 4px 20px rgba(0, 45, 114, 0.12) !important;
+    padding: 4px 8px !important;
     z-index: 999 !important;
-    border-top: 1px solid #dde3ec !important;
 }
 
 /* Sidebar */
