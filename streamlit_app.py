@@ -160,7 +160,10 @@ div[data-testid="stHorizontalBlock"] button:hover {
 }
 
 /* Sidebar */
-section[data-testid="stSidebar"] > div { background: #001f4d !important; }
+section[data-testid="stSidebar"] > div {
+    background: #001f4d !important;
+    padding: 1rem 0.8rem !important;
+}
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] h1,
