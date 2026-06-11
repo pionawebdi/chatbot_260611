@@ -159,7 +159,12 @@ div[data-testid="stHorizontalBlock"] button:hover {
 /* Sidebar */
 section[data-testid="stSidebar"] > div { background: #001f4d !important; }
 section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] p { color: rgba(255,255,255,.88) !important; }
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] small { color: #ffffff !important; }
 section[data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] {
     background: rgba(255,255,255,.12) !important;
     color: #fff !important; border: none !important;
