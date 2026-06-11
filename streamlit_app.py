@@ -173,24 +173,23 @@ section[data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] {
     color: #fff !important; border: none !important;
 }
 
-/* Image uploader in sidebar */
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.08) !important;
-    border: 2px dashed rgba(255,255,255,0.4) !important;
-    border-radius: 12px !important;
-    padding: 8px !important;
+/* Image uploader in main area */
+.main [data-testid="stFileUploader"] {
+    background: #fff !important;
+    border: 2px dashed #d0daea !important;
+    border-radius: 14px !important;
+    padding: 6px 10px !important;
 }
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
+.main [data-testid="stFileUploaderDropzone"] {
     background: transparent !important;
 }
-section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzoneInstructions"] span {
-    color: rgba(255,255,255,0.85) !important;
+.main [data-testid="stFileUploaderDropzoneInstructions"] span {
+    color: #6b7a99 !important;
+    font-size: 13px !important;
 }
-section[data-testid="stSidebar"] [data-testid="stFileUploader"] button {
-    background: rgba(255,255,255,0.15) !important;
-    color: #fff !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
+.main [data-testid="stFileUploader"] button {
     border-radius: 8px !important;
+    font-size: 13px !important;
 }
 
 /* Scrollbar */
@@ -247,25 +246,6 @@ with st.sidebar:
         use_container_width=True,
         key="mic_sidebar",
     )
-    st.divider()
-    st.markdown("### 🖼️ 이미지 첨부")
-    st.caption("이미지를 올리고 질문하세요")
-    uploaded = st.file_uploader(
-        "",
-        type=["jpg", "jpeg", "png", "webp"],
-        label_visibility="collapsed",
-        key="img_upload",
-    )
-    if uploaded:
-        st.image(uploaded, use_container_width=True)
-        st.session_state.pending_image = uploaded.getvalue()
-        st.session_state.pending_image_type = uploaded.type
-    if st.session_state.get("pending_image") and not uploaded:
-        st.success("이미지 준비됨. 질문을 입력하세요!", icon="🖼️")
-        if st.button("🗑️ 이미지 제거", use_container_width=True):
-            st.session_state.pending_image = None
-            st.session_state.pending_image_type = None
-            st.rerun()
 
 # ── API key guard ─────────────────────────────────────────────────────────────
 if not openai_api_key:
@@ -331,6 +311,34 @@ for col, (cat, query) in zip(cols, CATEGORY_QUERIES.items()):
     with col:
         if st.button(cat, key=f"cat_{cat}", use_container_width=True):
             st.session_state.preset_prompt = query
+
+# ── Image upload (메인 콘텐츠 영역) ──────────────────────────────────────────
+st.markdown("""
+<div style="margin:8px 0 4px;color:#9aabbd;font-size:12px;text-align:center">
+    📎 이미지를 첨부하고 질문할 수 있어요
+</div>
+""", unsafe_allow_html=True)
+
+uploaded = st.file_uploader(
+    "",
+    type=["jpg", "jpeg", "png", "webp"],
+    label_visibility="collapsed",
+    key="img_upload",
+)
+if uploaded:
+    col_img, col_del = st.columns([4, 1])
+    with col_img:
+        st.image(uploaded, use_container_width=True)
+    with col_del:
+        if st.button("🗑️", key="del_img", help="이미지 제거"):
+            st.session_state.pending_image = None
+            st.session_state.pending_image_type = None
+            st.rerun()
+    st.session_state.pending_image = uploaded.getvalue()
+    st.session_state.pending_image_type = uploaded.type
+elif st.session_state.get("pending_image"):
+    st.session_state.pending_image = None
+    st.session_state.pending_image_type = None
 
 # ── Voice input (사이드바에서 처리) ───────────────────────────────────────────
 if sidebar_audio and sidebar_audio.get("bytes"):
