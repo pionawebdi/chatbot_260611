@@ -38,7 +38,7 @@ st.markdown("""
 #MainMenu, footer, header { visibility: hidden; }
 
 .stApp {
-    background: #ffffff;
+    background: #f0f4f8;
     font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
                  'Noto Sans KR', sans-serif;
 }
