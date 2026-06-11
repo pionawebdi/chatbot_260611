@@ -70,7 +70,7 @@ st.markdown("""
     text-align: center; padding: 11px 16px 10px;
     box-shadow: 0 2px 12px rgba(0,45,114,0.35);
 }
-.topbar-title { color: #fff; font-size: 16px; font-weight: 700; margin: 0; letter-spacing: -.3px; }
+.topbar-title { color: #fff; font-size: 32px; font-weight: 700; margin: 0; letter-spacing: -.3px; }
 .topbar-sub   { color: rgba(255,255,255,.72); font-size: 11px; margin: 2px 0 0; }
 
 /* Date divider */
