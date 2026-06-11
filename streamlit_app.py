@@ -268,7 +268,6 @@ for col, (cat, query) in zip(cols, CATEGORY_QUERIES.items()):
     with col:
         if st.button(cat, key=f"cat_{cat}", use_container_width=True):
             st.session_state.preset_prompt = query
-            st.rerun()
 
 # ── Chat input ────────────────────────────────────────────────────────────────
 typed = st.chat_input("궁금한 거 뭐든 물어보세요. 작은 것도 괜찮아요 🗼")
