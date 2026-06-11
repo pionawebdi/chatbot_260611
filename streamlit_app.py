@@ -173,6 +173,26 @@ section[data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] {
     color: #fff !important; border: none !important;
 }
 
+/* Image uploader in sidebar */
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] {
+    background: rgba(255,255,255,0.08) !important;
+    border: 2px dashed rgba(255,255,255,0.4) !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploaderDropzoneInstructions"] span {
+    color: rgba(255,255,255,0.85) !important;
+}
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] button {
+    background: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: 8px !important;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: #c0c8d8; border-radius: 4px; }
