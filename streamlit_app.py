@@ -38,7 +38,7 @@ st.markdown("""
 #MainMenu, footer, header { visibility: hidden; }
 
 .stApp {
-    background: #f0f4f8;
+    background: #ffffff;
     font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
                  'Noto Sans KR', sans-serif;
 }
@@ -99,7 +99,7 @@ st.markdown("""
 .bubble-ai-inner li { margin: 2px 0; }
 .bubble-ai-inner strong { color: #002d72; }
 .bubble-ai-inner code {
-    background: #f0f4f8; border-radius: 4px;
+    background: #f4f6f9; border-radius: 4px;
     padding: 1px 5px; font-size: 12px;
 }
 
